@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.LinkedList;
 
 import javax.swing.JFrame;
 
@@ -22,6 +23,7 @@ public class MainGame implements Runnable, MouseListener, MouseMotionListener {
 	// System
 	private Thread thread;
 	public static boolean running = false;
+	public LinkedList<GameObject> objects = new LinkedList<GameObject>();
 	
 	Player player;
 
@@ -72,6 +74,7 @@ public class MainGame implements Runnable, MouseListener, MouseMotionListener {
 	}
 
 	public void update() {
+		camX += 1;
 		mouseWorldX = mouseX + camX - canvas.getWidth() / 2;
 		mouseWorldY = mouseY + camY - canvas.getHeight() / 2;
 		player.update();
@@ -87,10 +90,7 @@ public class MainGame implements Runnable, MouseListener, MouseMotionListener {
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		g.setColor(Color.WHITE);
 		g.translate(-camX + canvas.getWidth() / 2, -camY + canvas.getHeight() / 2);
-
-		if (mouseDown) {
-			g.fillRect(mouseWorldX - 16, mouseWorldY - 16, 32, 32);
-		}
+		g.setColor(Color.GRAY);
 		g.fillRect(-16, -16, 32, 32);
 		player.render(g);
 
