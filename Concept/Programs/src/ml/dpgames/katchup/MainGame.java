@@ -15,14 +15,18 @@ public class MainGame implements Runnable, MouseListener, MouseMotionListener {
 	private JFrame frame;
 	private Canvas canvas;
 	public static int mouseX = 0, mouseY = 0;
+	public static int mouseWorldX = 0, mouseWorldY = 0;
 	public static boolean mouseDown = false;
 	public static int camX = 0, camY = 0;
 
 	// System
 	private Thread thread;
 	public static boolean running = false;
+	
+	Player player;
 
 	public MainGame() {
+		player = new Player();
 		// Setup frame
 		frame = new JFrame("Katchup");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -68,7 +72,9 @@ public class MainGame implements Runnable, MouseListener, MouseMotionListener {
 	}
 
 	public void update() {
-
+		mouseWorldX = mouseX + camX - canvas.getWidth() / 2;
+		mouseWorldY = mouseY + camY - canvas.getHeight() / 2;
+		player.update();
 	}
 
 	public void render() {
@@ -80,13 +86,15 @@ public class MainGame implements Runnable, MouseListener, MouseMotionListener {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		g.setColor(Color.WHITE);
-		g.translate(camX, camY);
+		g.translate(-camX + canvas.getWidth() / 2, -camY + canvas.getHeight() / 2);
 
 		if (mouseDown) {
-			g.fillRect(mouseX - 16, mouseY - 16, 32, 32);
+			g.fillRect(mouseWorldX - 16, mouseWorldY - 16, 32, 32);
 		}
+		g.fillRect(-16, -16, 32, 32);
+		player.render(g);
 
-		g.translate(-camX, -camY);
+		g.translate(camX - canvas.getWidth() / 2, camY - canvas.getHeight() / 2);
 		g.dispose();
 		canvas.getBufferStrategy().show();
 	}
@@ -113,7 +121,7 @@ public class MainGame implements Runnable, MouseListener, MouseMotionListener {
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-		mouseDown = false;
+		// mouseDown = false;
 	}
 
 	@Override
